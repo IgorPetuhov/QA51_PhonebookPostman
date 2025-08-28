@@ -1,0 +1,767 @@
+{
+	"info": {
+		"_postman_id": "292c7505-0a4e-4dd7-a899-73f6b03de8a3",
+		"name": "QA51_Phonebook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Login registered user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "18033b3c-b8ba-47ab-b63a-60353216b6ff",
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"pm.environment.set(\"token\", jsonData.token);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "7c8f53d6-e500-4663-929e-09dc1ee42bb8",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "a4a62985-0a9c-40a1-bc74-497909c22d77",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmx.de\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/user/login/usernamepassword"
+							},
+							"response": []
+						}
+					],
+					"id": "0aa26327-e8de-473a-bb46-fe675d4b9f89",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4936cdc7-7a1d-4c05-8ec0-462cdc8ae05b",
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e1c59800-784a-4367-a674-1beaa498a056",
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Status code name has string: ok\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Login registered user with wrong username(401)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "18033b3c-b8ba-47ab-b63a-60353216b6ff",
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"pm.test(\"Status code name has string\", function () {\r",
+											"    pm.response.to.have.status(\"Unauthorized\");\r",
+											"});\r",
+											"pm.test(\"API message equals:Login or Password incorrect\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Login or Password incorrect\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "7c8f53d6-e500-4663-929e-09dc1ee42bb8",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "8524392b-6ad8-45e5-894f-0bd3a1ee0940",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmxde\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/user/login/usernamepassword"
+							},
+							"response": []
+						}
+					],
+					"id": "92e1f9d2-e0d2-4e97-b112-e620300ae006"
+				}
+			],
+			"id": "dc8d7a0c-9d2f-4a67-96d1-bd96d2368698"
+		},
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Get all contacts  before add",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "13081b35-29d3-4c2a-8321-30587e1b9d4f",
+										"exec": [
+											"let response = pm.response.json();\r",
+											"\r",
+											"if(response.contacts && response.contacts.length > 0 && response.contacts[0].id){\r",
+											"    let contactID = response.contacts[0].id;\r",
+											"    pm.environment.set(\"id\", contactID);\r",
+											"    console.log(\"Contact ID was saved: \", contactID);\r",
+											"} else {\r",
+											"\r",
+											"}console.warn(\"Contacts missing or no ID\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "ed9fb001-e859-4501-95af-70fdee92fb62",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "d232cb79-813b-4369-9530-b9ae2ee33e61",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmx.de\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Add contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9e7dd807-eb9a-4933-93fa-4d7c70885631",
+										"exec": [
+											"pm.test(\"Body matches string:Contact was added!\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Contact was added!\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "5163199c-18ca-4e39-b094-e49b9a6d2547",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "88cdaf9d-e48e-4833-b669-7309f5f70e5f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Marc\",\r\n  \"lastName\": \"Zucker\",\r\n  \"email\": \"zucker@gm.de\",\r\n  \"phone\": \"1234567890\",\r\n  \"address\": \"Bonn\",\r\n  \"description\": \"goalkeeper\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all contacts   after add",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f552f741-b84e-4343-860c-8668e2f4517e",
+										"exec": [
+											"let response = pm.response.json();\r",
+											"\r",
+											"//get first element of contacts arrays \r",
+											"let contactID = response.contacts[0].id;\r",
+											"\r",
+											"pm.environment.set(\"id\", contactID);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "679e5ef6-0655-4192-b142-ad75bf87aec9",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "c0373b95-c86b-4533-bf50-6ea9390ac4d5",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmx.de\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Modify contact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6a86301f-3758-4056-bf59-16c073738e93",
+										"exec": [
+											"pm.test(\"Test message equals:Contact was updated\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Contact was updated\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6900c67f-bcd7-4dc4-850a-e061ecd46181",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "538ef215-2655-4e3b-aee7-8c289791511d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n            \"id\": \"{{id}}\",\r\n            \"name\": \"Wowa\",\r\n            \"lastName\": \"Wow\",\r\n            \"email\": \"wow@gmx.de\",\r\n            \"phone\": \"0123456789\",\r\n            \"address\": \"Bonn\",\r\n            \"description\": \"goalkeeper\"\r\n        }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all contacts modify  add",
+							"id": "beafa093-d3dd-4df0-9320-6786f0d2b336",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmx.de\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete contact by id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "efd0cf62-42aa-4615-a080-76b4c423462b",
+										"exec": [
+											"pm.test(\"Test message equals: Contact was deleted!\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql( \"Contact was deleted!\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "5de8d790-6fe7-45a5-abde-8a22650cc98d",
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url:\"https://contactapp-telran-backend.herokuapp.com/v1/contacts\",\r",
+											"    method:\"GET\",\r",
+											"    header:{\"Authorization\": pm.environment.get(\"token\")\r",
+											"    }\r",
+											"},function(err,res) {\r",
+											"    if(err) {\r",
+											"        console.error(\"Error while requesting contacts: \",err)\r",
+											"    } else {\r",
+											"        let data = res.json();\r",
+											"        if(data.contacts && data.contacts.length > 0) {\r",
+											"            let contactId = data.contacts[0].id;\r",
+											"            pm.environment.set(\"id\",contactId);\r",
+											"            console.log(\"Contact ID was saved: \", contactId);\r",
+											"        } else {\r",
+											"            console.warn(\"Contacts are missing in answer\")\r",
+											"        }\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "c0d665ff-f4a0-4bbf-b817-9850502332c0",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n            \"id\": \"6909321a-dbf5-4675-a718-1c0a1c585a9c\",\r\n            \"name\": \"Vasja\",\r\n            \"lastName\": \"Wow\",\r\n            \"email\": \"wow@gmx.de\",\r\n            \"phone\": \"0123456789\",\r\n            \"address\": \"Bonn\",\r\n            \"description\": \"goalkeeper\"\r\n        }"
+								},
+								"url": "{{BaseURL}}/v1/contacts/{{id}}"
+							},
+							"response": []
+						}
+					],
+					"id": "48668bf2-6915-45eb-814f-95f4906a06f6",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2ba2fdca-1e59-4a9f-95b8-bee806b9b4fb",
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "82d0c023-796b-45cf-bca5-0eb91ba64c58",
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string:OK\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Get all contacts  with wrong token(401)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "13081b35-29d3-4c2a-8321-30587e1b9d4f",
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {\r",
+											"    pm.response.to.have.status(401);\r",
+											"});\r",
+											"pm.test(\"Status code name has string: Unauthorized\", function () {\r",
+											"    pm.response.to.have.status(\"Unauthorized\");\r",
+											"});\r",
+											"pm.test(\"Test message eqals: JWT strings must contain exactly 2 period characters. Found: 0\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"JWT strings must contain exactly 2 period characters. Found: 0\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "ed9fb001-e859-4501-95af-70fdee92fb62",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "c90de2f5-2900-4acf-85b7-6a573e58c7be",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "gndgkjreht8567",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"gosha@dmx.de\",\r\n  \"password\": \"De$123456\"\r\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Add contact with invalid phone(400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9e7dd807-eb9a-4933-93fa-4d7c70885631",
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"API error equals: Bad Request \", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(\"Bad Request\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "5163199c-18ca-4e39-b094-e49b9a6d2547",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "72356608-f0e4-4655-a4c4-32e62c9bdcae",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Marc\",\r\n  \"lastName\": \"Zucker\",\r\n  \"email\": \"zucker@gm.de\",\r\n  \"phone\": \"dfbjfukghkmg\",\r\n  \"address\": \"Bonn\",\r\n  \"description\": \"goalkeeper\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Modify contact with wrong ID(400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "6a86301f-3758-4056-bf59-16c073738e93",
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string: Bad Request\", function () {\r",
+											"    pm.response.to.have.status(\"Bad Request\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body message contains: not found in your contacts!\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"not found in your contacts!\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6900c67f-bcd7-4dc4-850a-e061ecd46181",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "edc6ef2a-2320-4fdd-ab41-3aabd8a79133",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n            \"id\": \"536578\",\r\n            \"name\": \"Wowa\",\r\n            \"lastName\": \"Wow\",\r\n            \"email\": \"wow@gmx.de\",\r\n            \"phone\": \"0123456789\",\r\n            \"address\": \"Bonn\",\r\n            \"description\": \"goalkeeper\"\r\n        }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete contact by wrong ID(400)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "efd0cf62-42aa-4615-a080-76b4c423462b",
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code name has string: Bad Request\", function () {\r",
+											"    pm.response.to.have.status(\"Bad Request\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body message contacts: not found in your contacts!\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"not found in your contacts!\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "5de8d790-6fe7-45a5-abde-8a22650cc98d",
+										"exec": [
+											"pm.sendRequest({\r",
+											"    url:\"https://contactapp-telran-backend.herokuapp.com/v1/contacts\",\r",
+											"    method:\"GET\",\r",
+											"    header:{\"Authorization\": pm.environment.get(\"token\")\r",
+											"    }\r",
+											"},function(err,res) {\r",
+											"    if(err) {\r",
+											"        console.error(\"Error while requesting contacts: \",err)\r",
+											"    } else {\r",
+											"        let data = res.json();\r",
+											"        if(data.contacts && data.contacts.length > 0) {\r",
+											"            let contactId = data.contacts[0].id;\r",
+											"            pm.environment.set(\"id\",contactId);\r",
+											"            console.log(\"Contact ID was saved: \", contactId);\r",
+											"        } else {\r",
+											"            console.warn(\"Contacts are missing in answer\")\r",
+											"        }\r",
+											"    }\r",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"id": "55deecfb-fc36-47e4-af5d-d0152b328e5a",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n            \"id\": \"6909321a-dbf5-4675-a718-1c0a1c585a9c\",\r\n            \"name\": \"Vasja\",\r\n            \"lastName\": \"Wow\",\r\n            \"email\": \"wow@gmx.de\",\r\n            \"phone\": \"0123456789\",\r\n            \"address\": \"Bonn\",\r\n            \"description\": \"goalkeeper\"\r\n        }"
+								},
+								"url": "{{BaseURL}}/v1/contacts/1432ghjg"
+							},
+							"response": []
+						}
+					],
+					"id": "df2ef2fa-b1aa-4e29-a4ce-cb5b931b73ef"
+				}
+			],
+			"id": "bf2f6d2d-8a15-4ac6-b0b0-fa8dba697e26"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4ad21dac-0e7f-4851-b4b3-8a079cdd64fa",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7300a4c8-75fc-4632-841e-2c3c1e427746",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response time is less than 700ms\", function () {\r",
+					"    pm.expect(pm.response.responseTime).to.be.below(700);\r",
+					"});"
+				]
+			}
+		}
+	]
+}
